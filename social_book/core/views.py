@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User, auth
 # send the messages
 from django.contrib import messages
-from .models import Profile
+from .models import Profile, Post
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -11,7 +11,9 @@ from django.contrib.auth.decorators import login_required
 #need login in to be able to see the home page
 @login_required(login_url='signin')
 def index(request):
-    return render(request, 'index.html')
+    user_object =User.objects.get(username = request.user.username)
+    user_profile = Profile.objects.get(user=user_object)
+    return render(request, 'index.html', {'user_profile': user_profile})
 
 def signup(request):
     if request.method == 'POST':
@@ -96,5 +98,17 @@ def settings(request):
         return redirect('settings')
                    
     return render(request, 'setting.html', {'user_profile': user_profile})
+    
+@login_required(login_url='signin')   
+def upload(request):
+    if request.method == "POST":
+        user = request.user.username
+        image = request.FILES.get('image_upload')
+        caption = request.POST['caption']
+        new_post = Post.objects.create(user=user, image=image, caption = caption)
+        new_post.save()
+        return redirect('/')
+    else:
+        return redirect("/")
     
     

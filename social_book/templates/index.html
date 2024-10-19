@@ -50,38 +50,37 @@
                         <a href="#"
                             class="bg-pink-500 flex font-bold hidden hover:bg-pink-600 hover:text-white inline-block items-center lg:block max-h-10 mr-4 px-4 py-2 rounded shado text-white">
                             <ion-icon name="add-circle" class="-mb-1
-                             mr-1 opacity-90 text-xl uilus-circle"></ion-icon> Upload Pics / Videos
+                             mr-1 opacity-90 text-xl uilus-circle"></ion-icon> Upload Pics 
                         </a>
                          <!-- upload dropdown box -->
                         <div uk-dropdown="pos: top-right;mode:click ; animation: uk-animation-slide-bottom-small" class="header_dropdown">
     
                             <!-- notivication header -->
                             <div class="px-4 py-3 -mx-5 -mt-4 mb-5 border-b">
-                                <h4>Upload Pics or Videos</h4>
+                                <h4>Upload Pics</h4>
                             </div>
     
                             <!-- notification contents -->
+                            
                             <div class="flex justify-center flex-center text-center">
     
                                 <div class="flex flex-col choose-upload text-center">
-                                   
-                                    <div class="bg-gray-100 border-2 border-dashed flex flex-col h-24 items-center justify-center relative w-full rounded-lg  ">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-12">
-                                            <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
-                                            <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
-                                        </svg>
-                                    </div>
-
-                                    <p class="my-3 leading-6"> Upload pics or videos <br> please upload her ..
-                                    </p>
-                                    <div uk-form-custom>
-                                        <input type="file">
-                                        <a href="#" class="button soft-warning small"> Choose file</a>
-                                    </div>
-    
-                                    <a href="#" class="uk-text-muted mt-3 uk-link"
-                                        uk-toggle="target: .choose-upload ;  animation: uk-animation-slide-right-small, uk-animation-slide-left-medium; queued: true">
-                                        Or Import Video </a>
+                                    <form action="upload" method="POST" enctype="multipart/form-data"> 
+                                        {% csrf_token %}
+                                        <p class="my-3 leading-6"> Upload pics
+                                        </p>
+                                        <div>
+                                            <input type="file" name = "image_upload">
+                                            <textarea class="button soft-warning small"name="caption"placeholder="caption... "></textarea>
+                                            <br>
+                                            <button class="button bg-blue-700" type="submit">Upload</button>
+                                            <!--<a href="#" class="button soft-warning small"> Choose file</a>-->
+                                        </div>
+        
+                                        <a href="#" class="uk-text-muted mt-3 uk-link"
+                                            uk-toggle="target: .choose-upload ;  animation: uk-animation-slide-right-small, uk-animation-slide-left-medium; queued: true">
+                                            Or Import Video </a>
+                                    </form>
                                 </div>
     
                                 <div class="uk-flex uk-flex-column choose-upload" hidden>
@@ -108,7 +107,7 @@
                                 Your Video size Must be Maxmium 999MB
                             </div>
                         </div>
-                        
+
                          <!-- Notification -->
 
                         <a href="#" class="header-links-item">
@@ -167,11 +166,11 @@
                         <!-- profile -->
 
                         <a href="#">
-                            <img src="{% static 'assets/images/avatars/avatar-2.jpg' %}" class="header-avatar" alt="">
+                            <img src="{{user_profile.profileimg.url}}" class="header-avatar" alt="">
                         </a>
                         <div uk-drop="mode: click;offset:9" class="header_dropdown profile_dropdown border-t">
                             <ul>
-                                <li><a href="settings"> Account setting </a> </li>
+                                <li><a href="{% url 'settings' %}"> Account setting </a> </li>
                                 <!--<li><a href="explore.html">explore </a> </li>-->
                                 <li><a href="#"> Help </a> </li>
                                 <li><a href="logout"> Log Out</a></li>
@@ -188,7 +187,7 @@
 
                 <div class="lg:flex justify-center lg:space-x-10 lg:space-y-0 space-y-5">
 
-                    <!-- left sidebar-->
+               left sidebar-->
                     <div class="space-y-5 flex-shrink-0 lg:w-7/12">
 
                         <!-- post 1-->
