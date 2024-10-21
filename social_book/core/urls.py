@@ -10,5 +10,6 @@ urlpatterns =[
     path('upload', views.upload, name='upload'),
     path('like_post', views.like_post, name="like_post"),
     path('profile/<str:pk>', views.profile, name = "profile"),
-    path('follow', views.follow, name='follow')
+    path('follow', views.follow, name='follow'),
+    path('search', views.search, name='search'),
 ]
