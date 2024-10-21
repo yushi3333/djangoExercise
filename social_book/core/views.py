@@ -5,6 +5,7 @@ from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from .models import Profile, Post, LikePost, FollowersCount
 from django.contrib.auth.decorators import login_required
+from itertools import chain
 # Create your views here.
 
 
@@ -13,8 +14,20 @@ from django.contrib.auth.decorators import login_required
 def index(request):
     user_object =User.objects.get(username = request.user.username)
     user_profile = Profile.objects.get(user=user_object)
+    
+    user_following_list=[]
+    feed = []
+    user_following = FollowersCount.objects.filter(follower=request.user.username)
+    for users in user_following:
+        user_following_list.append(users.user)
+    for usernames in user_following_list:
+        feed_lists = Post.objects.filter(user=usernames)
+        feed.append(feed_lists)
+    feed_list =list(chain(*feed))
+        
     posts = Post.objects.all()
-    return render(request, 'index.html', {'user_profile': user_profile, 'posts': posts})
+    
+    return render(request, 'index.html', {'user_profile': user_profile, 'posts': feed_list})
 
 def signup(request):
     if request.method == 'POST':
@@ -175,4 +188,29 @@ def follow(request):
             return redirect('/profile/'+ user)
     else:
         return redirect('/')
+    
+    
+def search(request):
+    
+    user_object = User.objects.get(username=request.user.username)
+    user_profile = Profile.objects.get(user=user_object)
+    
+    #get the user object(username, images)
+    if request.method == "POST":
+        username = request.POST['username']
+        username_object = User.objects.filter(username__icontains=username)
+        username_profile = []
+        username_profile_list = []
+        
+        
+        for users in username_object:
+            username_profile.append(users.id)
+        for ids in username_profile:
+            profile_lists = Profile.objects.filter(id_user = ids)
+            username_profile_list.append(profile_lists)
+            
+        username_profile_list = list(chain(*username_profile_list))
+        
+        
+    return render(request, 'search.html', {'user_profile': user_profile, 'username_profile_list':username_profile_list })
         
