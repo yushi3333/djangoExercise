@@ -25,29 +25,19 @@
                 <div class="header_inner">
                     <div class="left-side">
                         <!-- Logo -->
-                        <div id="logo" class=" uk-hidden@s">
+                        <div id="logo" class="uk-hidden@s">
                             <a href="/">
                                 <!-- <b><h1 style="text-transform: uppercase;">Social Book</h1></b> -->
                             </a>
                         </div>
 
-                        <!--<div class="triger" uk-toggle="target: #wrapper ; cls: sidebar-active">
-                            <i class="uil-bars"></i>
-                        </div>-->
-
+                      
                         <!-- <div class="header_search"> -->
                             
-                                <input type="text" name="username" placeholder="Search for username..">&nbsp; &nbsp;
-                                <button type="submit"><i class="fa fa-search fa-1x"></i></button>
+                        <input type="text" name="username" placeholder="Search for username..">&nbsp; &nbsp;
+                        <button type="submit"><i class="fa fa-search fa-1x"></i></button>
                             
-                            <!-- <div class="icon-search">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </div> -->
-                        <!-- </div> -->
+                            
 
                     </div>
                     <div class="right-side lg:pr-4">
@@ -100,7 +90,7 @@
                                             <path fill-rule="evenodd" d="M2 9.5A3.5 3.5 0 005.5 13H9v2.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 15.586V13h2.5a4.5 4.5 0 10-.616-8.958 4.002 4.002 0 10-7.753 1.977A3.5 3.5 0 002 9.5zm9 3.5H9V8a1 1 0 012 0v5z" clip-rule="evenodd" />
                                         </svg>
                                     </div>
-                                    <p class="my-3 leading-6"> Import videos from YouTube <br> Copy / Paste your video link here </p>
+                                    {% comment %} <p class="my-3 leading-6"> Import videos from YouTube <br> Copy / Paste your video link here </p> {% endcomment %}
                                     <form class="uk-grid-small" uk-grid>
                                         <div class="uk-width-expand">
                                             <input type="text" class="uk-input uk-form-small  bg-gray-200 " style="box-shadow:none" placeholder="Paste link">
@@ -110,7 +100,7 @@
                                     </form>
                                     <a href="#" class="uk-text-muted mt-3 uk-link"
                                         uk-toggle="target: .choose-upload ; animation: uk-animation-slide-left-small, uk-animation-slide-right-medium; queued: true">
-                                        Or Upload Video </a>
+                                         </a>
                                 </div>
     
                             </div>
@@ -152,7 +142,7 @@
                         <!-- <a href="#" class="header-links-item">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="0.5em" height="0.5em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><g fill="currentColor"><path d="M2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/></g></svg>
                         </a> -->
-                        <div uk-drop="mode: click;offset: 4" class="header_dropdown">
+                        {% comment %} <div uk-drop="mode: click;offset: 4" class="header_dropdown">
                             <h4
                                 class="-mt-5 -mx-5 bg-gradient-to-t from-gray-100 to-gray-50 border-b font-bold px-6 py-3">
                                 Messages </h4>
@@ -172,7 +162,7 @@
 
                             </ul>
                             <a href="#" class="see-all">See all</a>
-                        </div>
+                        </div> {% endcomment %}
 
                         <!-- profile -->
 
@@ -192,7 +182,7 @@
             </header>
             </form>
             
-            <div style="margin-left: 250px; margin-right: 250px;">
+            <div style="margin-left: 50px; margin-right: 50px;">
                 
                 <style>
                 body{margin-top:20px;
@@ -244,12 +234,12 @@
                     border-bottom-left-radius: 4px
                 }
 
-                @media (min-width:768px) {
+                @media (min-width:300px) {
                     .search-result-item .image-link {
                         display: inline-block;
                         margin: -20px 0 -20px -20px;
                         float: left;
-                        width: 200px
+                        width: 100vw;
                     }
                 }
 
@@ -260,7 +250,8 @@
                 }
 
                 .search-result-item .image {
-                    max-width: 100%
+                    width: 200px;
+                    height:200px;
                 }
 
                 .search-result-item .info {
@@ -279,7 +270,12 @@
 
                 @media (min-width:768px) {
                     .search-result-item-body {
-                        margin-left: 200px
+                        margin-left: 100px
+                    }
+                }
+                @media (min-width:300px) {
+                    .search-result-item-body {
+                        margin-left: 10px
                     }
                 }
 
@@ -322,12 +318,12 @@
                         
                         {% for users in username_profile_list %}
                         <section class="search-result-item">
-                            <a class="image-link" href="/profile/{{users.user}}"><img class="image" src="{{users.profileimg.url}}">
+                            <a class="image-link" href="/profile/{{users.user.username}}"><img class="image" src="{{users.profileimg.url}}">
                             </a>
                             <div class="search-result-item-body">
                                 <div class="row">
                                     <div class="col-sm-9">
-                                        <h4 class="search-result-item-heading"><a href="/profile/{{users.user}}"><b>@{{users.user}}</b></a></h4>
+                                        <h4 class="search-result-item-heading"><a href="/profile/{{users.user.username}}"><b>@{{users.user}}</b></a></h4>
                                         <p class="info">{{users.location}}</p>
                                         <p class="description">{{users.bio}}</p>
                                     </div>

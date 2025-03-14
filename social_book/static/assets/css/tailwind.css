@@ -514,10 +514,21 @@ video {
   max-width: 100%;
   height: auto;
 }
-
+/* 
 .container{
   width: 100%;
+  display: grid;
+  grid-template-areas:
+  "content menu";
+  grid-template-columns: 3fr 1fr;
+  gap: 5px;
 }
+.container > div.menu {
+  grid-area: menu;
+}
+.container > div.content {
+  grid-area: content;
+} */
 
 @media (min-width: 640px){
   .container{
@@ -1284,6 +1295,7 @@ video {
 .-mx-2{
   margin-left: -0.5rem;
   margin-right: -0.5rem;
+
 }
 
 .-mx-4{

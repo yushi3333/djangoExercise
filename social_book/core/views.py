@@ -3,31 +3,71 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User, auth
 # send the messages
 from django.contrib import messages
-from .models import Profile, Post, LikePost, FollowersCount
+from .models import Profile, Post, LikePost, FollowersCount, Comment
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 from itertools import chain
-# Create your views here.
+import random
+
 
 
 #need login in to be able to see the home page
 @login_required(login_url='signin')
 def index(request):
+    
     user_object =User.objects.get(username = request.user.username)
     user_profile = Profile.objects.get(user=user_object)
     
+    # Get the list of users that the current user is following
     user_following_list=[]
     feed = []
     user_following = FollowersCount.objects.filter(follower=request.user.username)
+    
     for users in user_following:
         user_following_list.append(users.user)
+        
+     # Include current user's username to show their own posts
+    user_following_list.append(request.user.username)
+        
+    # Get posts from followed users and attach their profile data
     for usernames in user_following_list:
-        feed_lists = Post.objects.filter(user=usernames)
+        feed_lists = Post.objects.filter(user__username=usernames)
+        for post in feed_lists:
+            post.profile = Profile.objects.get(user=post.user)
+        
         feed.append(feed_lists)
     feed_list =list(chain(*feed))
         
-    posts = Post.objects.all()
     
-    return render(request, 'index.html', {'user_profile': user_profile, 'posts': feed_list})
+    
+    # user suggestion starts
+    all_users = User.objects.all()
+    user_following_all = []
+    for user in user_following:
+        user_list = User.objects.filter(username=user.user).first()
+        if user_list:
+            user_following_all.append(user_list)
+        
+    new_suggestions_list = [x for x in all_users if x not in user_following_all and x != request.user]
+    
+    current_user = User.objects.filter(username=request.user.username).first()
+    final_suggestions_list = [x for x in new_suggestions_list if x != current_user]
+    random.shuffle(final_suggestions_list)
+    
+    # Prepare profile suggestions
+    username_profile = []
+    username_profile_list = []
+    
+    for users in final_suggestions_list:
+        username_profile.append(users.id)
+        
+    for ids in username_profile:
+        profile_lists = Profile.objects.filter(id_user = ids)
+        username_profile_list.append(profile_lists)
+    suggestions_username_profile_list = list(chain(*username_profile_list))
+        
+    
+    return render(request, 'index.html', {'user_profile': user_profile, 'posts': feed_list, 'suggestions_username_profile_list':suggestions_username_profile_list[:4]})
 
 def signup(request):
     if request.method == 'POST':
@@ -78,9 +118,7 @@ def signin(request):
             #user does not exist
             messages.info(request, 'Credentials Invalid')
             return redirect('signin')
-           
-            
-        
+                  
     else:
         return render(request, 'signin.html')
 
@@ -116,7 +154,7 @@ def settings(request):
 @login_required(login_url='signin')   
 def upload(request):
     if request.method == "POST":
-        user = request.user.username
+        user = request.user
         image = request.FILES.get('image_upload')
         caption = request.POST['caption']
         new_post = Post.objects.create(user=user, image=image, caption = caption)
@@ -142,20 +180,21 @@ def like_post(request):
         post.save()
         return redirect('/')
 
-def profile(request, pk):
-    user_object = User.objects.get(username = pk)
+def profile(request, username):
+    user_object = User.objects.get(username = username)
     user_profile = Profile.objects.get(user=user_object)
     #number of posts that belong to the user
-    user_posts = Post.objects.filter(user=pk)
+    user_posts = Post.objects.filter(user=user_object)
     user_post_length = len(user_posts)
     follower=request.user.username
-    user = pk
-    if FollowersCount.objects.filter(follower=follower, user=user).first():
+    user = username
+    if FollowersCount.objects.filter(follower=follow, user=user_object).first():
+
         button_text="Unfollow"
     else:
         button_text="follow"
-    user_followers = len(FollowersCount.objects.filter(user=pk))
-    user_following = len(FollowersCount.objects.filter(follower=pk))
+    user_followers = len(FollowersCount.objects.filter(user=user_object))
+    user_following = len(FollowersCount.objects.filter(follower=user_object))
     
     
     context = {
@@ -213,4 +252,29 @@ def search(request):
         
         
     return render(request, 'search.html', {'user_profile': user_profile, 'username_profile_list':username_profile_list })
-        
+
+
+
+@login_required(login_url='signin')
+def add_comment(request, post_id):
+    if request.method == "POST":
+        content = request.POST.get('content')
+        post = Post.objects.get(id=post_id)
+
+        if content:
+            Comment.objects.create(post=post, user=request.user, content=content)
+
+        return redirect('/')
+
+@login_required(login_url='signin')
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    # Ensure only the post owner can delete the post
+    if post.user == request.user:
+        post.delete()
+        messages.success(request, "Post deleted successfully!")
+    else:
+        messages.error(request, "You are not authorized to delete this post!")
+
+    return redirect('/')
