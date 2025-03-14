@@ -7,9 +7,9 @@ from datetime import datetime
 
 User = get_user_model()
 #database
-# Create your models here.
+# Create models here.
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile')
     id_user = models.IntegerField()
     bio = models.TextField(blank=True)
     profileimg = models.ImageField(upload_to='profile_images',default='blank_image.png')
@@ -20,13 +20,16 @@ class Profile(models.Model):
     
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    user =  models.CharField(max_length=100)
+ 
+    # User as foreign key
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='post_images')
     caption = models.TextField()
     create_at = models.DateTimeField(default=datetime.now)
     no_of_likes = models.IntegerField(default = 0)
     def __str__(self):
-        return self.user
+        # return self.user
+        return self.user.username
     
     
 class LikePost(models.Model):
@@ -40,6 +43,17 @@ class FollowersCount(models.Model):
     user = models.CharField(max_length=100)
     def __str__(self):
         return self.user
+    
+    
+class Comment(models.Model):
+    post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.content[:20]}"
+
 
     
     

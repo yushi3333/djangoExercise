@@ -1,0 +1,15 @@
+yushi
+Gys0081234
+
+#create admin
+python manage.py createsuperuser
+
+#update
+python manage.py makemigrations
+python manage.py migrate
+
+#start
+python manage.py runserver
+
+#activate the virtual environment
+source djangoenv/bin/activate
