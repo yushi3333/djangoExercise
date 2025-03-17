@@ -13,6 +13,7 @@
 html,body{
 	font-family: calibri;
     background: #fff;
+   
 }
 .post-img {
     width: 90vw; 
@@ -22,11 +23,12 @@ html,body{
 }
 
 .wrapper{
+    width:100%;
     
 }
 
 .bio{
-    text-align: justify !important; width: 1100px; color: #000; font-family: calibri; margin-left:5%;text-decoration: none;outline: none;
+    text-align: justify !important; width: 100vw; color: #000; font-family: calibri; margin-left:5%;text-decoration: none;outline: none;
 }
 
 body {
@@ -83,7 +85,7 @@ img {
     overflow: hidden;
     position: relative;
     z-index: 1;
-    width: 1230px;
+    width: 95vw;
     -webkit-box-shadow: 0 0 6px #747474;
     -moz-box-shadow: 0 0 6px #747474;
     -ms-box-shadow: 0 0 6px #747474;
@@ -739,13 +741,13 @@ header.sticky {
 /*--- timeline area ---*/
 
 .feature-photo .container-fluid {
-    padding: 0 43px;
+    /* padding: 0 20px; */
 }
 
 .feature-photo {
     display: block;
     position: relative;
-    width: 100%;
+    width: 100vw;
 }
 
 .feature-photo > figure {
@@ -754,7 +756,7 @@ header.sticky {
 
 .feature-photo > figure img {
     display: inline-block;
-    width: 100%;
+    width: 100vw;
 }
 
 .user-avatar {
